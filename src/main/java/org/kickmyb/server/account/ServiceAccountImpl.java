@@ -1,5 +1,6 @@
 package org.kickmyb.server.account;
 
+import org.kickmyb.server.ConnectionChecker;
 import org.kickmyb.transfer.SignupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,9 +32,13 @@ public class ServiceAccountImpl implements ServiceAccount {
     @Override
     @Transactional(rollbackFor = UsernameAlreadyTaken.class)
     public void signup(SignupRequest req) throws UsernameTooShort, PasswordTooShort, UsernameAlreadyTaken {
+        ConnectionChecker checker = new ConnectionChecker();
+        if (!checker.internetOn()){
+            throw new RuntimeException("No internet connection. Please check your Wi-Fi or network.");
+        }
         String username = req.username.toLowerCase().trim();
-        if (username.length() < 2) throw new UsernameTooShort();
-        if (req.password.length() < 4) throw new PasswordTooShort();
+        if (username.length() < 2) throw new UsernameTooShort("Le nom d'utilisateur est trop court.");
+        if (req.password.length() < 4) throw new PasswordTooShort("Le mot de passe est trop court.");
         // validation de l'unicité est faite au niveau de la BD voir MUser.java
         try {
             MUser p = new MUser();
@@ -41,7 +46,7 @@ public class ServiceAccountImpl implements ServiceAccount {
             p.password = passwordEncoder.encode(req.password);
             userRepository.saveAndFlush(p);
         } catch (DataIntegrityViolationException e) {
-            throw new UsernameAlreadyTaken();
+            throw new UsernameAlreadyTaken("L'utilisateur existe déja.");
         }
     }
 }

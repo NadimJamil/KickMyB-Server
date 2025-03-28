@@ -3,7 +3,9 @@ package org.kickmyb.server.account;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
 import org.kickmyb.server.ConfigHTTP;
+import org.kickmyb.server.ConnectionChecker;
 import org.kickmyb.transfer.SigninRequest;
 import org.kickmyb.transfer.SigninResponse;
 import org.kickmyb.transfer.SignupRequest;
@@ -62,12 +64,13 @@ public class ControllerAccount {
             resp.username = s.username;
             return resp;
         } catch (org.springframework.security.authentication.BadCredentialsException bce) {
-            throw new BadCredentialsException();
+            throw new BadCredentialsException("Le nom d'utilisateur ou le mot de passe est incorecte");
         }
     }
 
     @PostMapping("/api/id/signup")
     public @ResponseBody SigninResponse signup(@RequestBody SignupRequest s) throws ServiceAccount.UsernameTooShort, ServiceAccount.PasswordTooShort, ServiceAccount.UsernameAlreadyTaken, BadCredentialsException {
+
         System.out.println("ID : SIGNUP request " + s);
         ConfigHTTP.attenteArticifielle();
         userService.signup(s);

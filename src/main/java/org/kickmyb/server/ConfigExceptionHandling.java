@@ -1,9 +1,11 @@
 package org.kickmyb.server;
 
+import org.kickmyb.server.account.ServiceAccount;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -30,5 +32,25 @@ public class ConfigExceptionHandling extends ResponseEntityExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("text", "plain", StandardCharsets.UTF_8));
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ServiceAccount.UsernameTooShort.class)
+    public ResponseEntity<String> handleUsernameTooShort(ServiceAccount.UsernameTooShort ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ServiceAccount.PasswordTooShort.class)
+    public ResponseEntity<String> handlePasswordTooShort(ServiceAccount.PasswordTooShort ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ServiceAccount.UsernameAlreadyTaken.class)
+    public ResponseEntity<String> handleUsernameAlreadyTaken(ServiceAccount.UsernameAlreadyTaken ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }
