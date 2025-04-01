@@ -37,8 +37,8 @@ public class ServiceAccountImpl implements ServiceAccount {
             throw new RuntimeException("No internet connection. Please check your Wi-Fi or network.");
         }
         String username = req.username.toLowerCase().trim();
-        if (username.length() < 2) throw new UsernameTooShort("Le nom d'utilisateur est trop court.");
-        if (req.password.length() < 4) throw new PasswordTooShort("Le mot de passe est trop court.");
+        if (username.length() < 2) throw new UsernameTooShort();
+        if (req.password.length() < 4) throw new PasswordTooShort();
         // validation de l'unicité est faite au niveau de la BD voir MUser.java
         try {
             MUser p = new MUser();
