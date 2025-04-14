@@ -107,6 +107,18 @@ public class ServiceTaskImpl implements ServiceTask {
         return res;
     }
 
+    @Override
+    public void deleteTask(Long id, MUser user){
+        MTask task = repo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));;
+        List<MTask> taskList = user.tasks;
+
+        if (!user.tasks.contains(task)){
+            throw new RuntimeException("Task does not belong to user");
+        }
+        taskList.remove(task);
+        repo.delete(task);
+    }
+
     private int percentageDone(MTask t) {
         return t.events.isEmpty()? 0 : t.events.get(t.events.size()-1).resultPercentage;
     }
@@ -179,5 +191,4 @@ public class ServiceTaskImpl implements ServiceTask {
 
         return response;
     }
-
 }

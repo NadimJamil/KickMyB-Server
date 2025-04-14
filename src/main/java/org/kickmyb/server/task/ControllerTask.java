@@ -6,6 +6,7 @@ import org.kickmyb.transfer.AddTaskRequest;
 import org.kickmyb.transfer.HomeItemResponse;
 import org.kickmyb.transfer.TaskDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -55,6 +56,16 @@ public class ControllerTask {
         ConfigHTTP.attenteArticifielle();
         MUser user = currentUser();
         return serviceTask.detail(id, user);
+    }
+
+    @PostMapping("api/delete/{taskId}")
+    public ResponseEntity<Void>  delete(@PathVariable long id){
+        System.out.println("KICKB SERVER : DeleteTask with cookie ");
+        ConfigHTTP.attenteArticifielle();
+        MUser user = currentUser();
+        serviceTask.deleteTask(id, user);
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
