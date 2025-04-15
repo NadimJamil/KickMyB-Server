@@ -46,7 +46,7 @@ public class ServiceAccountImpl implements ServiceAccount {
             p.password = passwordEncoder.encode(req.password);
             userRepository.saveAndFlush(p);
         } catch (DataIntegrityViolationException e) {
-            throw new UsernameAlreadyTaken("L'utilisateur existe déja.");
+            throw new UsernameAlreadyTaken();
         }
     }
 }

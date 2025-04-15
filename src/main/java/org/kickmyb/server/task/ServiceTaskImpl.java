@@ -110,13 +110,19 @@ public class ServiceTaskImpl implements ServiceTask {
     @Override
     public void deleteTask(Long id, MUser user){
         MTask task = repo.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));;
-        List<MTask> taskList = user.tasks;
 
-        if (!user.tasks.contains(task)){
+        boolean taskExists = user.tasks.stream()
+                .anyMatch(t -> t.id.equals(task.id));
+
+        if (!taskExists){
             throw new RuntimeException("Task does not belong to user");
         }
-        taskList.remove(task);
+//        user.tasks.remove(task);
+        user.tasks.removeIf(t -> t.id.equals(id));
+        repoUser.save(user);
         repo.delete(task);
+        repo.flush();
+        repoUser.flush();
     }
 
     private int percentageDone(MTask t) {
