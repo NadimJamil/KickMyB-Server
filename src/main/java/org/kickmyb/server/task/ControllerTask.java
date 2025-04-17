@@ -6,6 +6,7 @@ import org.kickmyb.transfer.AddTaskRequest;
 import org.kickmyb.transfer.HomeItemResponse;
 import org.kickmyb.transfer.TaskDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,16 +59,31 @@ public class ControllerTask {
         return serviceTask.detail(id, user);
     }
 
-    @PostMapping("api/delete/{taskId}")
-    public ResponseEntity<Void>  delete(@PathVariable long id){
+//    @PostMapping("/api/delete/{taskId}")
+//    public ResponseEntity<Void>  delete(@PathVariable long id){
+//        System.out.println("KICKB SERVER : DeleteTask with cookie ");
+//        ConfigHTTP.attenteArticifielle();
+//        MUser user = currentUser();
+//        serviceTask.deleteTask(id, user);
+//
+//        return ResponseEntity.noContent().build();
+//    }
+
+    @PostMapping("/api/delete/{taskId}")
+    public @ResponseBody ResponseEntity<Void> delete(@PathVariable long taskId) {
         System.out.println("KICKB SERVER : DeleteTask with cookie ");
         ConfigHTTP.attenteArticifielle();
         MUser user = currentUser();
-        serviceTask.deleteTask(id, user);
 
-        return ResponseEntity.noContent().build();
+        try {
+            serviceTask.deleteTask(taskId, user);
+            return ResponseEntity.noContent().build();  // Returns HTTP 204 No Content (successful deletion)
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // Returns HTTP 400 Bad Request for known issues like task not found or user mismatch
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // Returns HTTP 500 for unexpected errors
+        }
     }
-
     /**
      * Accède au Principal stocké dans la mémoire vivre (HttpSession)
      * La session de l'utilisateur est accédée grâce au  JSESSIONID qui était dans lq requête dans un cookie
