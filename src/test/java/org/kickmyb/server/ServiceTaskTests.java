@@ -167,9 +167,9 @@ class ServiceTaskTests {
         Long longId = (long) id;
         try{
             serviceTask.deleteTask(longId, u);
-            fail("Aurait du lancer ServiceTask.Existing");
+            fail("Aurait du lancer Runtime Exception");
         } catch (Exception e) {
-            assertEquals(ServiceTask.Empty.class, e.getClass());
+            assertEquals(RuntimeException.class, e.getClass());
         }
     }
 
@@ -196,9 +196,9 @@ class ServiceTaskTests {
         Long taskId = tacheASupp.id;
         try{
             serviceTask.deleteTask(taskId, u2);
-            fail("Aurait du lancer ServiceTask.Existing");
+            fail("Aurait du lancer Runtime Exception");
         } catch (Exception e) {
-            assertEquals(ServiceTask.Empty.class, e.getClass());
+            assertEquals(RuntimeException.class, e.getClass());
         }
     }
 }
