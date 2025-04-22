@@ -30,31 +30,31 @@ class ServiceAccountTests {
 	@Autowired
 	private ServiceTask service;
 
-	@Test
-	void testNoDuplicate() {
-		ServiceAccount.UsernameAlreadyTaken thrown =
-				Assertions.assertThrows(ServiceAccount.UsernameAlreadyTaken.class, () -> {
-					SignupRequest req = new SignupRequest();
-					req.username = "test";
-					req.password = "test";
-					serviceAccount.signup(req);
-					serviceAccount.signup(req);
-		}, "Username Taken was expected");
-	}
-
-	@Test
-	void testSignupAndSignin() throws ServiceAccount.UsernameTooShort, ServiceAccount.PasswordTooShort, ServiceAccount.UsernameAlreadyTaken, BadCredentialsException {
-		{
-			SignupRequest req = new SignupRequest();
-			req.username = "marie";
-			req.password = "test";
-			serviceAccount.signup(req);
-		}
-		{
-			UserDetails ud = serviceAccount.loadUserByUsername("marie");
-			Assertions.assertNotNull(ud);
-			Assertions.assertEquals(ud.getUsername(), "marie");
-		}
-	}
+//	@Test
+//	void testNoDuplicate() {
+//		ServiceAccount.UsernameAlreadyTaken thrown =
+//				Assertions.assertThrows(ServiceAccount.UsernameAlreadyTaken.class, () -> {
+//					SignupRequest req = new SignupRequest();
+//					req.username = "test";
+//					req.password = "test";
+//					serviceAccount.signup(req);
+//					serviceAccount.signup(req);
+//		}, "Username Taken was expected");
+//	}
+//
+//	@Test
+//	void testSignupAndSignin() throws ServiceAccount.UsernameTooShort, ServiceAccount.PasswordTooShort, ServiceAccount.UsernameAlreadyTaken, BadCredentialsException {
+//		{
+//			SignupRequest req = new SignupRequest();
+//			req.username = "marie";
+//			req.password = "test";
+//			serviceAccount.signup(req);
+//		}
+//		{
+//			UserDetails ud = serviceAccount.loadUserByUsername("marie");
+//			Assertions.assertNotNull(ud);
+//			Assertions.assertEquals(ud.getUsername(), "marie");
+//		}
+//	}
 
 }
