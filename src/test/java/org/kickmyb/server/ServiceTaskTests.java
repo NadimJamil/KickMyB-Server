@@ -76,61 +76,94 @@ class ServiceTaskTests {
     }
 
     @Test
-    void testAddTaskEmpty()  {
-        MUser u = new MUser();
-        u.username = "M. Test";
-        u.password = passwordEncoder.encode("Passw0rd!");
-        userRepository.saveAndFlush(u);
+    void testAjouterTacheNomVideKo() throws ServiceAccount.UsernameTooShort, ServiceAccount.PasswordTooShort,
+            ServiceAccount.UsernameAlreadyTaken, BadCredentialsException {
 
-        AddTaskRequest atr = new AddTaskRequest();
-        atr.name = "";
-        atr.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+        // on crée un compte
+        SignupRequest req = new SignupRequest();
+        req.username = "alice";
+        req.password = "Passw0rd!";
+        serviceAccount.signup(req);
 
+        // on récupère l'utilisateur
+        MUser alice = serviceTask.userFromUsername("alice");
+
+        // on crée une tâche avec un nom vide
+        AddTaskRequest addTaskRequest = new AddTaskRequest();
+        addTaskRequest.name = "";
+        addTaskRequest.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+
+        // on essaie d'ajouter la tâche à l'utilisateur
         try{
-            serviceTask.addOne(atr, u);
-            fail("Aurait du lancer ServiceTask.Empty");
+            serviceTask.addOne(addTaskRequest, alice);
         } catch (Exception e) {
-            assertEquals(ServiceTask.Empty.class, e.getClass());
         }
+        // on vérifie que la tâche n'a pas été ajoutée
+        assertEquals(0, serviceTask.home(alice.id).size());
     }
 
     @Test
-    void testAddTaskTooShort() throws ServiceTask.Empty, ServiceTask.TooShort, ServiceTask.Existing {
-        MUser u = new MUser();
-        u.username = "M. Test";
-        u.password = passwordEncoder.encode("Passw0rd!");
-        userRepository.saveAndFlush(u);
+    void testAjouterTacheNomTropCourtKo() throws ServiceAccount.UsernameTooShort, ServiceAccount.PasswordTooShort,
+            ServiceAccount.UsernameAlreadyTaken, BadCredentialsException {
 
-        AddTaskRequest atr = new AddTaskRequest();
-        atr.name = "o";
-        atr.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+        // on crée un compte
+        SignupRequest req = new SignupRequest();
+        req.username = "alice";
+        req.password = "Passw0rd!";
+        serviceAccount.signup(req);
 
+        // on récupère l'utilisateur
+        MUser alice = serviceTask.userFromUsername("alice");
+
+        // on crée une tâche avec un nom trop court
+        AddTaskRequest addTaskRequest = new AddTaskRequest();
+        addTaskRequest.name = "t";
+        addTaskRequest.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+
+        // on essaie d'ajouter la tâche à l'utilisateur
         try{
-            serviceTask.addOne(atr, u);
-            fail("Aurait du lancer ServiceTask.TooShort");
+            serviceTask.addOne(addTaskRequest, alice);
         } catch (Exception e) {
-            assertEquals(ServiceTask.TooShort.class, e.getClass());
         }
+        // on vérifie que la tâche n'a pas été ajoutée
+        assertEquals(0, serviceTask.home(alice.id).size());
     }
 
     @Test
-    void testAddTaskExisting() throws ServiceTask.Empty, ServiceTask.TooShort, ServiceTask.Existing {
-        MUser u = new MUser();
-        u.username = "M. Test";
-        u.password = passwordEncoder.encode("Passw0rd!");
-        userRepository.saveAndFlush(u);
+    void testAjouterTacheNomExistantKo() throws ServiceTask.Empty, ServiceTask.TooShort, ServiceTask.Existing,
+            ServiceAccount.UsernameTooShort, ServiceAccount.PasswordTooShort,
+            ServiceAccount.UsernameAlreadyTaken, BadCredentialsException {
 
-        AddTaskRequest atr = new AddTaskRequest();
-        atr.name = "Bonne tâche";
-        atr.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+        // on crée un compte
+        SignupRequest req = new SignupRequest();
+        req.username = "alice";
+        req.password = "Passw0rd!";
+        serviceAccount.signup(req);
 
+        // on récupère l'utilisateur
+        MUser alice = serviceTask.userFromUsername("alice");
+
+        // on crée 2 tâches avec le même nom
+        AddTaskRequest addTaskRequest1 = new AddTaskRequest();
+        AddTaskRequest addTaskRequest2 = new AddTaskRequest();
+        addTaskRequest1.name = "Tâche 1";
+        addTaskRequest2.name = "Tâche 1";
+        addTaskRequest1.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+        addTaskRequest2.deadline = Date.from(new Date().toInstant().plusSeconds(3600));
+
+        // on ajoute la tâche 1 à l'utilisateur
+        serviceTask.addOne(addTaskRequest1, alice);
+
+        // on vérifie que la tâche a bien été ajoutée
+        assertEquals(1, serviceTask.home(alice.id).size());
+
+        // on essaie d'ajouter la tâche 2 à l'utilisateur
         try{
-            serviceTask.addOne(atr, u);
-            serviceTask.addOne(atr, u);
-            fail("Aurait du lancer ServiceTask.Existing");
+            serviceTask.addOne(addTaskRequest2, alice);
         } catch (Exception e) {
-            assertEquals(ServiceTask.Existing.class, e.getClass());
         }
+        // on vérifie que la tâche 2 n'a pas été ajoutée
+        assertEquals(1, serviceTask.home(alice.id).size());
     }
 
     @Test
