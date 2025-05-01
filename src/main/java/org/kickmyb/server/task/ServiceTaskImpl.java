@@ -1,6 +1,7 @@
 package org.kickmyb.server.task;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.kickmyb.server.account.MUser;
 import org.kickmyb.server.account.MUserRepository;
 import org.kickmyb.transfer.*;
@@ -63,6 +64,11 @@ public class ServiceTaskImpl implements ServiceTask {
         // valider si le nom existe déjà
         for (MTask b : user.tasks) {
             if (b.name.equalsIgnoreCase(req.name)) throw new Existing();
+        }
+        DateTime dateTime = DateTime.now();
+        Date date = dateTime.toDate();
+        if (req.deadline != null && req.deadline.before(date)) {
+            throw new IllegalArgumentException();
         }
         // tout est beau, on crée
         MTask t = new MTask();

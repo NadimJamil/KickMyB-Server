@@ -39,6 +39,8 @@ public class ControllerTask {
     public @ResponseBody String updateProgress(@PathVariable long taskID, @PathVariable int value) {
         System.out.println("KICKB SERVER : Progress for task : " + taskID + " @" + value);
         ConfigHTTP.attenteArticifielle();
+        MUser user = currentUser();
+//        if (user.tasks.stream().anyMatch(t -> t.id.equals(taskID)))
         serviceTask.updateProgress(taskID, value);
         return "";
     }
@@ -56,6 +58,7 @@ public class ControllerTask {
         System.out.println("KICKB SERVER : Detail  with cookie ");
         ConfigHTTP.attenteArticifielle();
         MUser user = currentUser();
+//        if (user.tasks.stream().anyMatch(t -> t.id.equals(id))){}
         return serviceTask.detail(id, user);
     }
 

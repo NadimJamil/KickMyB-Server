@@ -80,7 +80,7 @@ public class ConfigSecurity {
                         // tous les appels à l'API doit être fait quand connecté
                         .requestMatchers("/api/**").authenticated()
                         // nécessaire pour que Spring laisse passer les requêtes pour h2-console
-                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll() // dangereux car on peut voir les informations de tout le monde dans la base de données
                         // nécessaire pour faire fonctionner / et les démos MVC
                         .anyRequest().permitAll()
 

@@ -1,0 +1,20 @@
+Problème de contrôle d'acces dans le TP :
+un utilisateur connecté peut changer la progression d'une tâche d'un autre utilisateur
+Un utilisateur peut voir les détails d'une tâche d'un autre utilisateur
+On peut créer une tâche avec une date d'échéance qui est dans le passé
+
+Chose bien fait :
+On peut seulement supprimer ses propres tâches
+
+Comment fixer les problèmes de contrôle d'access :
+S'assurer que l'utilisateur qui change la progression de la tâche est celui qui a créer la tâche
+if (user.tasks.stream().anyMatch(t -> t.id.equals(taskID))){}
+S'assurer que l'utilisateur qui regarde les détails de la tâche est le créateur de la tâche
+if (user.tasks.stream().anyMatch(t -> t.id.equals(id))){}
+
+Comment changer le pourcentage de progression d'une tâche d'un autre utilisateur (Tutoriel) :
+1- Créer un compte avec la méthode Signup
+2- Se connecter avec la méthode Signin
+3- Créer une tâche et regarder son id
+4- Maintenant nous savons l'id de la tâche précédente (le id de ta tâche - 1)
+5- Changer la progression de la tâche
