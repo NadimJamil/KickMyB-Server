@@ -72,7 +72,7 @@
 
                 <div class="column is-one-third">
                     <div class="box">
-                        <h2 class="subtitle">Ajouter une tâche au compte actuel (nécessite d'être connecté) :: POST /api/add</h2>
+                        <h2 class="subtitle">Ajouter une tâche au compte actuel (nécessite d'être connecté) 📄 :: POST /api/add</h2>
                         <pre><code class="json">{
   "name" : "test",
   "deadline" : "2069-05-24T12:12:12"
@@ -82,21 +82,28 @@
 
                 <div class="column is-one-third">
                     <div class="box">
-                        <h2 class="subtitle">Voir les tâches du compte actuel (nécessite d'être connecté) :: GET /api/home</h2>
+                        <h2 class="subtitle">Voir les tâches du compte actuel (nécessite d'être connecté) 📋:: GET /api/home</h2>
                         <pre><code class="json"></code></pre>
                     </div>
                 </div>
                 <div class="column is-one-third">
                     <div class="box">
-                        <h2 class="subtitle">voir le détail d'une tâche :: GET /api/detail/{id}</h2>
+                        <h2 class="subtitle">voir le détail d'une tâche 🔍 :: GET /api/detail/{id}</h2>
                         <pre><code class="json"></code></pre>
                     </div>
                 </div>
 
                 <div class="column is-one-third">
                     <div class="box">
-                        <h2 class="subtitle">mettre à jour le % d'avancement :: GET /api/progress/{id}/{valeur}</h2>
+                        <h2 class="subtitle">mettre à jour le % d'avancement 📈 :: GET /api/progress/{id}/{valeur}</h2>
                         id est le l'identifiant de la tâche et valeur est la nouvelle valeur d'avancement
+                        <pre><code class="json"></code></pre>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="box">
+                        <h2 class="subtitle">Supprimer une tâche 🚮 :: POST /api/delete/{taskId}</h2>
+                        id est le l'identifiant de la tâche
                         <pre><code class="json"></code></pre>
                     </div>
                 </div>

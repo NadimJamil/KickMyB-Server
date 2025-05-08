@@ -40,8 +40,12 @@ public class ControllerTask {
         System.out.println("KICKB SERVER : Progress for task : " + taskID + " @" + value);
         ConfigHTTP.attenteArticifielle();
         MUser user = currentUser();
-//        if (user.tasks.stream().anyMatch(t -> t.id.equals(taskID)))
-        serviceTask.updateProgress(taskID, value);
+        if (user.tasks.stream().anyMatch(t -> t.id.equals(taskID))){
+            serviceTask.updateProgress(taskID, value);
+        }
+        else{
+            throw new IllegalArgumentException("You don't have access to this task little bastard");
+        }
         return "";
     }
 
@@ -58,7 +62,9 @@ public class ControllerTask {
         System.out.println("KICKB SERVER : Detail  with cookie ");
         ConfigHTTP.attenteArticifielle();
         MUser user = currentUser();
-//        if (user.tasks.stream().anyMatch(t -> t.id.equals(id))){}
+        if (user.tasks.stream().noneMatch(t -> t.id.equals(id))){
+            throw new IllegalArgumentException("You don't have access to this task little bastard");
+        }
         return serviceTask.detail(id, user);
     }
 
